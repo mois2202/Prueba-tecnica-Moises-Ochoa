@@ -481,3 +481,34 @@ p {
   }
 }
 
+.project-title-link {
+  font-weight: 600;
+  color: #fff;
+  cursor: pointer;
+  transition: color var(--transition-smooth);
+}
+
+.project-title-link:hover {
+  color: var(--primary);
+  text-decoration: underline;
+}
+
+.project-manage-link {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  cursor: pointer;
+  opacity: 0.85;
+  transition: all var(--transition-smooth);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.project-manage-link:hover {
+  color: var(--primary);
+  opacity: 1;
+}
+
+

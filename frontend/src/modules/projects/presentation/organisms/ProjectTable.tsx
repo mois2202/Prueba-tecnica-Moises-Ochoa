@@ -1,4 +1,4 @@
-import { Calendar, Edit2, Trash2, Columns } from 'lucide-react';
+import { Calendar, Edit2, Trash2 } from 'lucide-react';
 import type { Project } from '../../domain/project.types';
 
 interface ProjectTableProps {
@@ -42,8 +42,21 @@ export const ProjectTable: React.FC<ProjectTableProps> = ({ projects, onEdit, on
         <tbody>
           {projects.map((project) => (
             <tr key={project._id}>
-              <td style={{ fontWeight: 600, color: '#fff', width: '25%' }}>
-                {project.nombre}
+              <td style={{ width: '25%' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.2rem' }}>
+                  <span
+                    className="project-title-link"
+                    onClick={() => onViewKanban(project)}
+                  >
+                    {project.nombre}
+                  </span>
+                  <span
+                    className="project-manage-link"
+                    onClick={() => onViewKanban(project)}
+                  >
+                    Administrar proyecto →
+                  </span>
+                </div>
               </td>
               <td style={{ color: 'var(--text-secondary)', width: '45%' }}>
                 {project.descripcion}
@@ -56,14 +69,6 @@ export const ProjectTable: React.FC<ProjectTableProps> = ({ projects, onEdit, on
               </td>
               <td style={{ textAlign: 'right', width: '15%' }}>
                 <div style={{ display: 'inline-flex', gap: '0.5rem' }}>
-                  <button
-                    className="btn btn-secondary btn-sm"
-                    style={{ padding: '0.4rem 0.6rem', color: 'var(--primary)' }}
-                    onClick={() => onViewKanban(project)}
-                    title="Tablero Kanban"
-                  >
-                    <Columns size={14} />
-                  </button>
                   <button
                     className="btn btn-secondary btn-sm"
                     style={{ padding: '0.4rem 0.6rem' }}
