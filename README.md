@@ -8,7 +8,7 @@ Este es un monorepositorio que contiene la aplicación de **Gestión de Proyecto
 
 ### Backend (`/backend`)
 * **Framework**: [NestJS](https://nestjs.com/) (TypeScript)
-* **Base de Datos**: [MongoDB Atlas](https://www.mongodb.com/atlas/database) con **Mongoose** como ORM
+* **Base de Datos**: [MongoDB](https://www.mongodb.com/) alojado en **Railway** con **Mongoose** como ORM
 * **Seguridad**: Autenticación basada en **JWT** (JSON Web Tokens) y hasheo de contraseñas con **bcrypt**
 * **Validación**: Validaciones automáticas en la capa de transporte (DTOs) mediante `class-validator` y `class-transformer`
 
@@ -113,4 +113,34 @@ El servidor web del frontend iniciará en `http://localhost:5173` y el del backe
 ## 🛡️ Decisiones de Arquitectura y Límites
 1. **Inversión de Control**: Los componentes gráficos ubicados en `presentation` son "tontos" y reutilizables. Solo procesan datos recibidos de hooks de `application` y delegan sus interacciones mediante callbacks.
 2. **Procesamiento de Reportes**: De acuerdo con las pautas del proyecto, todos los reportes agregados y cálculos de productividad histórica se procesan enteramente en el backend mediante agregaciones de Mongoose, protegiendo al cliente frontend de cálculos pesados de negocio.
-3. **Manejo de Sesión**: La sesión se gestiona con persistencia automatizada en `localStorage` mediante Zustand en el frontend y se valida en cada petición de la API mediante cabeceras HTTP Bearer Bearer JWT validados en el backend.
+3. **Manejo de Sesión**: La sesión se gestiona con persistencia automatizada en `localStorage` mediante Zustand en el frontend y se valida en cada petición de la API mediante cabeceras HTTP Bearer JWT validados en el backend.
+
+---
+
+## 🏛️ Patrón Arquitectónico Detallado (Clean Architecture + FSD + Atomic Design)
+
+El frontend de esta aplicación fue desarrollado siguiendo un enfoque híbrido que combina la robustez y desacoplamiento de **Clean Architecture** (Puertos y Adaptadores) junto a la modularidad y escalabilidad de **Feature-Sliced Design (FSD)**:
+
+### 1. Desacoplamiento en Capas (Clean Architecture)
+Cada módulo de negocio está estrictamente separado en 4 capas de responsabilidad:
+* **`domain` (Capa de Dominio)**: Contiene los contratos de validación puros de Zod y los tipos TypeScript que modelan el negocio. Es 100% agnóstica de librerías visuales o HTTP.
+* **`adapters` (Capa de Adaptadores)**: Contiene los mappers encargados de normalizar y transformar las respuestas crudas de la base de datos (Backend) hacia los contratos de tipos de dominio del cliente.
+* **`application` (Capa de Aplicación)**: Centraliza los Custom Hooks de React y los Stores de Zustand encargados de orquestar la obtención de datos de red, estados reactivos locales y peticiones HTTP.
+* **`presentation` (Capa de Presentación)**: Contiene la interfaz de usuario. Al ser componentes presentacionales ("tontos"), no hacen peticiones directas de red ni manipulan lógica de negocio; solo renderizan datos limpios inyectados vía `props` y emiten eventos a través de callbacks.
+
+### 2. Organización por Módulos (FSD)
+El código de negocio está agrupado en directorios independientes bajo `/src/modules/`:
+* `auth`: Login, registro y control de sesión persistente.
+* `projects`: CRUD de proyectos y gestión de estatus.
+* `tasks`: Gestión, filtros cruzados y paginación de tareas.
+* `kanban`: Tablero Kanban dinámico e interactivo (cruce entre proyectos y tareas).
+* `reports`: Métricas analíticas en pantalla y generación de PDF.
+* *El código transversal (clientes HTTP, layout base, etc.) se aísla en `/src/core`.*
+
+### 3. Anatomía Visual (Atomic Design)
+La capa visual de presentación (`presentation`) estructura sus elementos en niveles incrementales de complejidad:
+* **Átomos (`/atoms`)**: Elementos gráficos mínimos e indivisibles (ej. `TaskBadge.tsx`, `TaskCheckbox.tsx`, `ReportCard.tsx`).
+* **Moléculas (`/molecules`)**: Elementos interactivos simples combinados (ej. `KanbanTaskCard.tsx`, `TaskFilterSelect.tsx`).
+* **Organismos (`/organisms`)**: Estructuras funcionales de negocio complejas (ej. `KanbanColumn.tsx`, `ProjectTable.tsx`, `ProductivityChart.tsx`).
+* **Plantillas (`/templates`)**: El wireframe o estructura genérica que define el layout de la pantalla (ej. `DashboardTemplate.tsx`, `TasksTemplate.tsx`).
+* **Páginas (`/pages`)**: El punto de entrada que inicializa el hook orquestador de aplicación e inyecta las propiedades a la plantilla.
