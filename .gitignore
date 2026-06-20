@@ -1,0 +1,13 @@
+# Monorepo dependencies
+node_modules/
+
+# Agent skills and configs
+.agents/
+
+# IDE settings
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
