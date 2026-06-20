@@ -9,9 +9,7 @@ export class UpdateTaskDto {
   @IsOptional()
   descripcion?: string;
 
-  @IsEnum(['pendiente', 'en progreso', 'completada'], {
-    message: 'El estado debe ser: pendiente, en progreso o completada.',
-  })
+  @IsString()
   @IsOptional()
   estado?: string;
 

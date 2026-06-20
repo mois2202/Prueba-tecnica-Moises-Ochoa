@@ -55,7 +55,7 @@ export const TasksPage: React.FC = () => {
 
   const statusOptions = [
     { value: '', label: 'Todos los Estados' },
-    { value: 'pendiente', label: 'Pendiente' },
+    { value: 'sin iniciar', label: 'Sin Iniciar' },
     { value: 'en progreso', label: 'En Progreso' },
     { value: 'completada', label: 'Completada' },
   ];

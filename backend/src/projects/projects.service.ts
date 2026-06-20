@@ -4,16 +4,25 @@ import { Model } from 'mongoose';
 import { Project, ProjectDocument } from './schemas/project.schema';
 import { CreateProjectDto } from './dto/create-project.dto';
 import { UpdateProjectDto } from './dto/update-project.dto';
+import { Task, TaskDocument } from '../tasks/schemas/task.schema';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     @InjectModel(Project.name) private projectModel: Model<ProjectDocument>,
+    @InjectModel(Task.name) private taskModel: Model<TaskDocument>,
   ) {}
 
   async create(createProjectDto: CreateProjectDto, userId: string): Promise<ProjectDocument> {
+    let estados = createProjectDto.estados;
+    if (estados) {
+      if (!estados.includes('sin iniciar')) {
+        estados = ['sin iniciar', ...estados];
+      }
+    }
     const project = new this.projectModel({
       ...createProjectDto,
+      ...(estados ? { estados } : {}),
       usuario: userId,
     });
     return project.save();
@@ -46,10 +55,28 @@ export class ProjectsService {
   }
 
   async update(id: string, updateProjectDto: UpdateProjectDto, userId: string): Promise<ProjectDocument> {
-    await this.findOne(id, userId);
+    const oldProject = await this.findOne(id, userId);
+
+    const updatedDto = { ...updateProjectDto };
+    if (updateProjectDto.estados) {
+      let estados = [...updateProjectDto.estados];
+      if (!estados.includes('sin iniciar')) {
+        estados = ['sin iniciar', ...estados];
+      }
+      updatedDto.estados = estados;
+
+      // Move tasks from deleted states back to 'sin iniciar'
+      const deletedStates = oldProject.estados.filter((state) => !estados.includes(state));
+      if (deletedStates.length > 0) {
+        await this.taskModel.updateMany(
+          { proyecto: id as any, estado: { $in: deletedStates } } as any,
+          { estado: 'sin iniciar' },
+        ).exec();
+      }
+    }
 
     const updatedProject = await this.projectModel
-      .findByIdAndUpdate(id, updateProjectDto, { new: true })
+      .findByIdAndUpdate(id, updatedDto, { new: true })
       .exec();
 
     if (!updatedProject) {

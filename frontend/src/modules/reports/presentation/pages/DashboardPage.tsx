@@ -4,7 +4,6 @@ import { useReports } from '../../application/hooks/useReports';
 import { ReportCard } from '../atoms/ReportCard';
 import { ProductivityChart } from '../organisms/ProductivityChart';
 import { DistributionChart } from '../organisms/DistributionChart';
-import { RiskProjectsList } from '../organisms/RiskProjectsList';
 import { DashboardTemplate } from '../templates/DashboardTemplate';
 
 export const DashboardPage: React.FC = () => {
@@ -32,7 +31,6 @@ export const DashboardPage: React.FC = () => {
 
   const resumen = data?.resumenGlobal;
   const distribucion = data?.distribucionEstados || [];
-  const alertas = data?.alertasRiesgo || [];
   const historial = data?.productividadHistorica || [];
 
   const header = (
@@ -73,11 +71,8 @@ export const DashboardPage: React.FC = () => {
 
   const chartsSection = (
     <div style={analyticsGridStyle}>
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', minWidth: 0 }}>
-        <ProductivityChart historial={historial} />
-        <DistributionChart distribucion={distribucion} />
-      </div>
-      <RiskProjectsList alertas={alertas} />
+      <ProductivityChart historial={historial} />
+      <DistributionChart distribucion={distribucion} />
     </div>
   );
 
@@ -109,7 +104,7 @@ const statsGridStyle: React.CSSProperties = {
 
 const analyticsGridStyle: React.CSSProperties = {
   display: 'grid',
-  gridTemplateColumns: '3fr 2fr',
+  gridTemplateColumns: 'repeat(auto-fit, minmax(400px, 1fr))',
   gap: '2rem',
 };
 

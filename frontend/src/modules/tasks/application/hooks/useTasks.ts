@@ -96,7 +96,7 @@ export function useTasks() {
   };
 
   const toggleTaskComplete = async (task: Task) => {
-    const nextStatus = task.estado === 'completada' ? 'pendiente' : 'completada';
+    const nextStatus = task.estado === 'completada' ? 'sin iniciar' : 'completada';
     try {
       await api.put(`/api/tasks/${task._id}`, { estado: nextStatus });
       fetchTasks();

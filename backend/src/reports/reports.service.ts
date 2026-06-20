@@ -24,55 +24,13 @@ export class ReportsService {
     const porcentajeCompletado = totalTasks === 0 ? 0 : Math.round((completedTasks / totalTasks) * 100);
 
     // 2. Status distribution
-    const estados = ['pendiente', 'en progreso', 'completada'];
-    const distribucionEstados = await Promise.all(
-      estados.map(async (estado) => {
-        const cantidad = await this.taskModel.countDocuments({ usuario: userId, estado } as any).exec();
-        return { estado, cantidad };
-      }),
-    );
-
-    // 3. Risk alerts: Top 5 projects with highest volume of pending/in-progress tasks
-    const alertasRiesgo = await this.taskModel.aggregate([
-      {
-        $match: {
-          usuario: userObjectId,
-          estado: { $in: ['pendiente', 'en progreso'] },
-        },
-      },
-      {
-        $group: {
-          _id: '$proyecto',
-          tareasPendientes: { $sum: 1 },
-        },
-      },
-      {
-        $sort: { tareasPendientes: -1 },
-      },
-      {
-        $limit: 5,
-      },
-      {
-        $lookup: {
-          from: 'projects',
-          localField: '_id',
-          foreignField: '_id',
-          as: 'proyectoInfo',
-        },
-      },
-      {
-        $unwind: '$proyectoInfo',
-      },
-      {
-        $project: {
-          _id: 1,
-          tareasPendientes: 1,
-          nombre: '$proyectoInfo.nombre',
-        },
-      },
+    const distribucionEstados = await this.taskModel.aggregate([
+      { $match: { usuario: userObjectId } },
+      { $group: { _id: '$estado', cantidad: { $sum: 1 } } },
+      { $project: { estado: '$_id', cantidad: 1, _id: 0 } },
     ]);
 
-    // 4. Historical productivity: Completed tasks in the last 30 days
+    // 3. Historical productivity: Completed tasks in the last 30 days
     const hace30Dias = new Date();
     hace30Dias.setDate(hace30Dias.getDate() - 30);
 
@@ -111,7 +69,6 @@ export class ReportsService {
         porcentajeCompletado,
       },
       distribucionEstados,
-      alertasRiesgo,
       productividadHistorica,
     };
   }

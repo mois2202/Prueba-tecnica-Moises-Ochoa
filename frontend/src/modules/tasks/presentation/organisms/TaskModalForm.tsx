@@ -6,6 +6,7 @@ import { taskSchema } from '../../domain/task.validation';
 interface Project {
   _id: string;
   nombre: string;
+  estados?: string[];
 }
 
 interface TaskModalFormProps {
@@ -34,11 +35,21 @@ export const TaskModalForm: React.FC<TaskModalFormProps> = ({
 }) => {
   const [titulo, setTitulo] = useState('');
   const [descripcion, setDescripcion] = useState('');
-  const [estado, setEstado] = useState('pendiente');
+  const [estado, setEstado] = useState('sin iniciar');
   const [prioridad, setPrioridad] = useState('media');
   const [fechaVencimiento, setFechaVencimiento] = useState('');
   const [proyecto, setProyecto] = useState('');
   const [errors, setErrors] = useState<any>({});
+
+  const selectedProj = projects.find((p) => p._id === proyecto);
+  const estadoOptions = selectedProj?.estados || ['sin iniciar', 'en progreso', 'completada'];
+
+  // Keep state in sync if it is not in the project's states list
+  useEffect(() => {
+    if (proyecto && estadoOptions.length > 0 && !estadoOptions.includes(estado)) {
+      setEstado(estadoOptions[0]);
+    }
+  }, [proyecto, estadoOptions, estado]);
 
   useEffect(() => {
     if (task) {
@@ -61,9 +72,9 @@ export const TaskModalForm: React.FC<TaskModalFormProps> = ({
     } else {
       setTitulo('');
       setDescripcion('');
-      setEstado('pendiente');
+      setEstado('sin iniciar');
       setPrioridad('media');
-      setProyecto('');
+      setProyecto(projects.length === 1 ? projects[0]._id : '');
       setFechaVencimiento('');
     }
     setErrors({});
@@ -172,10 +183,13 @@ export const TaskModalForm: React.FC<TaskModalFormProps> = ({
                 value={estado}
                 onChange={(e) => setEstado(e.target.value)}
                 disabled={isLoading}
+                style={{ textTransform: 'capitalize' }}
               >
-                <option value="pendiente">Pendiente</option>
-                <option value="en progreso">En Progreso</option>
-                <option value="completada">Completada</option>
+                {estadoOptions.map((est) => (
+                  <option key={est} value={est}>
+                    {est}
+                  </option>
+                ))}
               </select>
             </div>
 

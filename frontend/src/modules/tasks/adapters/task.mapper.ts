@@ -19,7 +19,7 @@ export class TaskMapper {
       _id: raw._id,
       titulo: raw.titulo,
       descripcion: raw.descripcion,
-      estado: raw.estado || 'pendiente',
+      estado: raw.estado || 'sin iniciar',
       prioridad: raw.prioridad || 'media',
       fechaVencimiento: raw.fechaVencimiento,
       proyecto: mappedProject,

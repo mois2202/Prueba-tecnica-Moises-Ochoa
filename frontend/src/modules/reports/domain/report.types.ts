@@ -9,12 +9,6 @@ export interface StatusItem {
   cantidad: number;
 }
 
-export interface RiskItem {
-  _id: string;
-  tareasPendientes: number;
-  nombre: string;
-}
-
 export interface ProductivityItem {
   fecha: string;
   cantidad: number;
@@ -23,6 +17,5 @@ export interface ProductivityItem {
 export interface ReportData {
   resumenGlobal: StatsSummary;
   distribucionEstados: StatusItem[];
-  alertasRiesgo: RiskItem[];
   productividadHistorica: ProductivityItem[];
 }

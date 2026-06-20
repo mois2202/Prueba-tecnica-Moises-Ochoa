@@ -17,6 +17,9 @@ export class Project {
 
   @Prop({ type: MongooseSchema.Types.ObjectId, ref: 'User', required: true, index: true })
   usuario: MongooseSchema.Types.ObjectId | User;
+
+  @Prop({ type: [String], default: ['sin iniciar', 'en progreso', 'completada'] })
+  estados: string[];
 }
 
 export const ProjectSchema = SchemaFactory.createForClass(Project);

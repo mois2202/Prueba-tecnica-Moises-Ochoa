@@ -1,11 +1,15 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Plus, Search, ArrowUpDown } from 'lucide-react';
 import { useProjects } from '../../application/hooks/useProjects';
 import { ProjectTable } from '../organisms/ProjectTable';
 import { ProjectModalForm } from '../organisms/ProjectModalForm';
 import { ProjectsTemplate } from '../templates/ProjectsTemplate';
+import { KanbanBoard } from '../../../kanban/presentation/organisms/KanbanBoard';
+import type { Project } from '../../domain/project.types';
 
 export const ProjectsPage: React.FC = () => {
+  const [activeKanbanProject, setActiveKanbanProject] = useState<Project | null>(null);
+
   const {
     projects,
     search,
@@ -71,6 +75,7 @@ export const ProjectsPage: React.FC = () => {
       projects={projects}
       onEdit={openEditModal}
       onDelete={deleteProject}
+      onViewKanban={(p) => setActiveKanbanProject(p)}
     />
   );
 
@@ -83,6 +88,15 @@ export const ProjectsPage: React.FC = () => {
       isLoading={isSubmitLoading}
     />
   );
+
+  if (activeKanbanProject) {
+    return (
+      <KanbanBoard
+        project={activeKanbanProject}
+        onBack={() => setActiveKanbanProject(null)}
+      />
+    );
+  }
 
   return (
     <ProjectsTemplate

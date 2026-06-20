@@ -15,8 +15,7 @@ export class Task {
 
   @Prop({
     type: String,
-    enum: ['pendiente', 'en progreso', 'completada'],
-    default: 'pendiente',
+    default: 'sin iniciar',
     index: true,
   })
   estado: string;

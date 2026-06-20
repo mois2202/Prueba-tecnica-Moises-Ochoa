@@ -1,14 +1,14 @@
-import React from 'react';
-import { Calendar, Edit2, Trash2 } from 'lucide-react';
+import { Calendar, Edit2, Trash2, Columns } from 'lucide-react';
 import type { Project } from '../../domain/project.types';
 
 interface ProjectTableProps {
   projects: Project[];
   onEdit: (project: Project) => void;
   onDelete: (id: string) => void;
+  onViewKanban: (project: Project) => void;
 }
 
-export const ProjectTable: React.FC<ProjectTableProps> = ({ projects, onEdit, onDelete }) => {
+export const ProjectTable: React.FC<ProjectTableProps> = ({ projects, onEdit, onDelete, onViewKanban }) => {
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
     return date.toLocaleDateString('es-ES', {
@@ -56,6 +56,14 @@ export const ProjectTable: React.FC<ProjectTableProps> = ({ projects, onEdit, on
               </td>
               <td style={{ textAlign: 'right', width: '15%' }}>
                 <div style={{ display: 'inline-flex', gap: '0.5rem' }}>
+                  <button
+                    className="btn btn-secondary btn-sm"
+                    style={{ padding: '0.4rem 0.6rem', color: 'var(--primary)' }}
+                    onClick={() => onViewKanban(project)}
+                    title="Tablero Kanban"
+                  >
+                    <Columns size={14} />
+                  </button>
                   <button
                     className="btn btn-secondary btn-sm"
                     style={{ padding: '0.4rem 0.6rem' }}

@@ -4,6 +4,7 @@ export interface Project {
   descripcion: string;
   fechaLimite: string;
   usuario?: string;
+  estados?: string[];
 }
 
 export interface CreateProjectInput {

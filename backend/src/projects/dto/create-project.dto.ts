@@ -1,4 +1,4 @@
-import { IsDateString, IsNotEmpty, IsString } from 'class-validator';
+import { IsArray, IsDateString, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 export class CreateProjectDto {
   @IsString()
@@ -12,4 +12,9 @@ export class CreateProjectDto {
   @IsDateString({}, { message: 'Debe proporcionar una fecha límite válida.' })
   @IsNotEmpty({ message: 'La fecha límite es obligatoria.' })
   fechaLimite: string;
+
+  @IsArray()
+  @IsString({ each: true })
+  @IsOptional()
+  estados?: string[];
 }
