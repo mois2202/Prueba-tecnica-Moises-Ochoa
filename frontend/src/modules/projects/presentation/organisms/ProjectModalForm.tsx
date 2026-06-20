@@ -1,15 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { z } from 'zod';
 import { X } from 'lucide-react';
+import type { Project } from '../../domain/project.types';
+import { projectSchema } from '../../domain/project.validation';
+import { ProjectField } from '../molecules/ProjectField';
 
-interface Project {
-  _id: string;
-  nombre: string;
-  descripcion: string;
-  fechaLimite: string;
-}
-
-interface ProjectModalProps {
+interface ProjectModalFormProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: { nombre: string; descripcion: string; fechaLimite: string }) => Promise<void>;
@@ -17,14 +12,7 @@ interface ProjectModalProps {
   isLoading: boolean;
 }
 
-// Zod Form validation schema
-const projectSchema = z.object({
-  nombre: z.string().min(1, 'El nombre del proyecto es obligatorio'),
-  descripcion: z.string().min(1, 'La descripción es obligatoria'),
-  fechaLimite: z.string().min(1, 'La fecha límite es obligatoria'),
-});
-
-export const ProjectModal: React.FC<ProjectModalProps> = ({
+export const ProjectModalForm: React.FC<ProjectModalFormProps> = ({
   isOpen,
   onClose,
   onSubmit,
@@ -40,7 +28,6 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
     if (project) {
       setNombre(project.nombre);
       setDescripcion(project.descripcion);
-      // Format ISO date to YYYY-MM-DD for date input
       const date = new Date(project.fechaLimite);
       const formattedDate = date.toISOString().split('T')[0];
       setFechaLimite(formattedDate);
@@ -84,47 +71,38 @@ export const ProjectModal: React.FC<ProjectModalProps> = ({
         </div>
 
         <form onSubmit={handleSubmit}>
-          <div className="form-group">
-            <label className="form-label" htmlFor="proj-nombre">Nombre del Proyecto</label>
-            <input
-              id="proj-nombre"
-              type="text"
-              className="form-input"
-              placeholder="Ej. Rediseño del sitio web"
-              value={nombre}
-              onChange={(e) => setNombre(e.target.value)}
-              disabled={isLoading}
-            />
-            {errors.nombre && <span className="form-error">{errors.nombre}</span>}
-          </div>
+          <ProjectField
+            id="proj-nombre"
+            label="Nombre del Proyecto"
+            type="text"
+            placeholder="Ej. Rediseño del sitio web"
+            value={nombre}
+            onChange={(e) => setNombre(e.target.value)}
+            error={errors.nombre}
+            disabled={isLoading}
+          />
 
-          <div className="form-group">
-            <label className="form-label" htmlFor="proj-desc">Descripción</label>
-            <textarea
-              id="proj-desc"
-              className="form-input"
-              rows={4}
-              placeholder="Describa los objetivos y detalles del proyecto..."
-              style={{ resize: 'vertical', fontFamily: 'inherit' }}
-              value={descripcion}
-              onChange={(e) => setDescripcion(e.target.value)}
-              disabled={isLoading}
-            />
-            {errors.descripcion && <span className="form-error">{errors.descripcion}</span>}
-          </div>
+          <ProjectField
+            id="proj-desc"
+            label="Descripción"
+            as="textarea"
+            rows={4}
+            placeholder="Describa los objetivos y detalles del proyecto..."
+            value={descripcion}
+            onChange={(e) => setDescripcion(e.target.value)}
+            error={errors.descripcion}
+            disabled={isLoading}
+          />
 
-          <div className="form-group" style={{ marginBottom: '2rem' }}>
-            <label className="form-label" htmlFor="proj-fecha">Fecha Límite</label>
-            <input
-              id="proj-fecha"
-              type="date"
-              className="form-input"
-              value={fechaLimite}
-              onChange={(e) => setFechaLimite(e.target.value)}
-              disabled={isLoading}
-            />
-            {errors.fechaLimite && <span className="form-error">{errors.fechaLimite}</span>}
-          </div>
+          <ProjectField
+            id="proj-fecha"
+            label="Fecha Límite"
+            type="date"
+            value={fechaLimite}
+            onChange={(e) => setFechaLimite(e.target.value)}
+            error={errors.fechaLimite}
+            disabled={isLoading}
+          />
 
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'flex-end' }}>
             <button

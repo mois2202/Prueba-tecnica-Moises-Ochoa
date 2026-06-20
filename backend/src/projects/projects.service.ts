@@ -46,10 +46,16 @@ export class ProjectsService {
   }
 
   async update(id: string, updateProjectDto: UpdateProjectDto, userId: string): Promise<ProjectDocument> {
-    const project = await this.findOne(id, userId);
+    await this.findOne(id, userId);
 
-    Object.assign(project, updateProjectDto);
-    return project.save();
+    const updatedProject = await this.projectModel
+      .findByIdAndUpdate(id, updateProjectDto, { new: true })
+      .exec();
+
+    if (!updatedProject) {
+      throw new NotFoundException('Proyecto no encontrado.');
+    }
+    return updatedProject;
   }
 
   async remove(id: string, userId: string): Promise<{ message: string }> {

@@ -1,24 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { z } from 'zod';
 import { X } from 'lucide-react';
-import api from '../../../../core/infrastructure/api';
+import type { Task } from '../../domain/task.types';
+import { taskSchema } from '../../domain/task.validation';
 
 interface Project {
   _id: string;
   nombre: string;
 }
 
-interface Task {
-  _id: string;
-  titulo: string;
-  descripcion?: string;
-  estado: string;
-  prioridad: string;
-  fechaVencimiento?: string;
-  proyecto: any;
-}
-
-interface TaskModalProps {
+interface TaskModalFormProps {
   isOpen: boolean;
   onClose: () => void;
   onSubmit: (data: {
@@ -31,54 +21,24 @@ interface TaskModalProps {
   }) => Promise<void>;
   task?: Task | null;
   isLoading: boolean;
+  projects: Project[];
 }
 
-// Zod validation schema
-const taskSchema = z.object({
-  titulo: z.string().min(1, 'El título de la tarea es obligatorio'),
-  descripcion: z.string().optional(),
-  estado: z.string().optional(),
-  prioridad: z.string().optional(),
-  fechaVencimiento: z.string().optional(),
-  proyecto: z.string().min(1, 'Debe seleccionar un proyecto asociado'),
-});
-
-export const TaskModal: React.FC<TaskModalProps> = ({
+export const TaskModalForm: React.FC<TaskModalFormProps> = ({
   isOpen,
   onClose,
   onSubmit,
   task,
   isLoading,
+  projects,
 }) => {
-  const [projects, setProjects] = useState<Project[]>([]);
   const [titulo, setTitulo] = useState('');
   const [descripcion, setDescripcion] = useState('');
   const [estado, setEstado] = useState('pendiente');
   const [prioridad, setPrioridad] = useState('media');
   const [fechaVencimiento, setFechaVencimiento] = useState('');
   const [proyecto, setProyecto] = useState('');
-  
   const [errors, setErrors] = useState<any>({});
-  const [isProjectsLoading, setIsProjectsLoading] = useState(false);
-
-  // Load projects list to choose from in dropdown
-  const loadProjects = async () => {
-    setIsProjectsLoading(true);
-    try {
-      const response = await api.get('/api/projects');
-      setProjects(response.data);
-    } catch (err) {
-      console.error('Error al cargar proyectos para el selector', err);
-    } finally {
-      setIsProjectsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    if (isOpen) {
-      loadProjects();
-    }
-  }, [isOpen]);
 
   useEffect(() => {
     if (task) {
@@ -86,7 +46,11 @@ export const TaskModal: React.FC<TaskModalProps> = ({
       setDescripcion(task.descripcion || '');
       setEstado(task.estado);
       setPrioridad(task.prioridad);
-      setProyecto(task.proyecto?._id || task.proyecto || '');
+      
+      const projId = typeof task.proyecto === 'object' && task.proyecto !== null 
+        ? task.proyecto._id 
+        : (task.proyecto || '');
+      setProyecto(projId);
       
       if (task.fechaVencimiento) {
         const date = new Date(task.fechaVencimiento);
@@ -123,8 +87,8 @@ export const TaskModal: React.FC<TaskModalProps> = ({
     if (!result.success) {
       const fieldErrors: any = {};
       result.error.issues.forEach((err) => {
-        if (err.path[0]) {
-          fieldErrors[err.path[0]] = err.message;
+        if (err.path[0] !== undefined) {
+          fieldErrors[String(err.path[0])] = err.message;
         }
       });
       setErrors(fieldErrors);
@@ -187,7 +151,7 @@ export const TaskModal: React.FC<TaskModalProps> = ({
               className="form-input"
               value={proyecto}
               onChange={(e) => setProyecto(e.target.value)}
-              disabled={isLoading || isProjectsLoading || !!task} // Block changing project on edit mode to maintain integrity
+              disabled={isLoading || !!task}
             >
               <option value="">Seleccione un proyecto...</option>
               {projects.map((p) => (

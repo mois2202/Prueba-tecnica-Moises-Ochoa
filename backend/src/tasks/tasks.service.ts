@@ -77,10 +77,17 @@ export class TasksService {
   }
 
   async update(id: string, updateTaskDto: UpdateTaskDto, userId: string): Promise<TaskDocument> {
-    const task = await this.findOne(id, userId);
+    await this.findOne(id, userId);
 
-    Object.assign(task, updateTaskDto);
-    return task.save();
+    const updatedTask = await this.taskModel
+      .findByIdAndUpdate(id, updateTaskDto, { new: true })
+      .populate('proyecto', 'nombre')
+      .exec();
+
+    if (!updatedTask) {
+      throw new NotFoundException('Tarea no encontrada.');
+    }
+    return updatedTask;
   }
 
   async remove(id: string, userId: string): Promise<{ message: string }> {
