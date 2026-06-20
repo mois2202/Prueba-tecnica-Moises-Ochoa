@@ -60,6 +60,7 @@ tsconfig.tsbuildinfo
 
 # dotenv environment variable files
 .env
+!.env
 .env.accounts
 .env.local
 .env.development.local

@@ -7,6 +7,7 @@ import { RegisterPage } from './modules/auth/presentation/pages/RegisterPage';
 import { ProjectsPage } from './modules/projects/presentation/pages/ProjectsPage';
 import { TasksPage } from './modules/tasks/presentation/pages/TasksPage';
 import { DashboardPage } from './modules/reports/presentation/pages/DashboardPage';
+import { ReportsPage } from './modules/reports/presentation/pages/ReportsPage';
 
 // Protected Route wrapper component
 const ProtectedRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
@@ -54,6 +55,7 @@ const App: React.FC = () => {
           <Route index element={<DashboardPage />} />
           <Route path="projects" element={<ProjectsPage />} />
           <Route path="tasks" element={<TasksPage />} />
+          <Route path="reports" element={<ReportsPage />} />
         </Route>
 
         {/* Fallback redirect */}

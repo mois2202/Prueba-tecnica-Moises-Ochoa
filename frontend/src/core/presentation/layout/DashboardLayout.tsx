@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, Outlet, useLocation, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Briefcase, ClipboardList, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, Briefcase, ClipboardList, LogOut, Menu, X, FileText } from 'lucide-react';
 import { useAuthStore } from '../../application/store/authStore';
 
 export const DashboardLayout: React.FC = () => {
@@ -18,6 +18,7 @@ export const DashboardLayout: React.FC = () => {
     { label: 'Dashboard', path: '/', icon: LayoutDashboard },
     { label: 'Proyectos', path: '/projects', icon: Briefcase },
     { label: 'Tareas', path: '/tasks', icon: ClipboardList },
+    { label: 'Reportes', path: '/reports', icon: FileText },
   ];
 
   const getInitials = (name: string) => {

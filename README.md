@@ -59,19 +59,18 @@ Asegúrate de tener instalados:
 * [Node.js](https://nodejs.org/) (versión 18 o superior recomendada)
 * [NPM](https://www.npmjs.com/) (incluido con Node.js)
 
-### 2. Configurar Variables de Entorno
-Copia los archivos `.env.template` y renómbralos a `.env` en sus respectivas carpetas:
+### 2. Variables de Entorno (Pre-configuradas)
+Los archivos `.env` **ya se encuentran incluidos y configurados en el repositorio** para facilitar una evaluación inmediata y directa. Están listos para conectar el backend con una base de datos MongoDB activa en la nube (Railway).
 
-* **Para el Backend (`/backend/.env`)**:
+* **Backend (`/backend/.env`)**:
   ```env
   PORT=3000
   NODE_ENV=development
-  MONGO_URI=mongodb+srv://mois2202:<db_password>@cluster0.0pvnv0j.mongodb.net/project_management?appName=Cluster0
+  MONGO_URI=mongodb://mongo:JybqEyyqGZZKASUMWQhyLIHAnBmVBDhq@acela.proxy.rlwy.net:17613/project_management?authSource=admin
   JWT_SECRET=development_secret_key_change_me
   ```
-  *(Reemplaza `<db_password>` por la contraseña correspondiente de la base de datos)*
 
-* **Para el Frontend (`/frontend/.env`)**:
+* **Frontend (`/frontend/.env`)**:
   ```env
   VITE_API_URL=http://localhost:3000
   PORT=5173
@@ -89,6 +88,25 @@ npm run dev
 ```
 
 El servidor web del frontend iniciará en `http://localhost:5173` y el del backend en `http://localhost:3000`.
+
+---
+
+## 📋 Funcionalidades Especiales Implementadas
+
+1. **Tablero Kanban con Columnas Dinámicas y Estatus Personalizados**:
+   * Permite añadir columnas personalizadas a cada proyecto (guardadas en la base de datos).
+   * Arrastrar y soltar (Drag & Drop) interactivo para actualizar de inmediato el estado de la tarea en la base de datos con persistencia optimista.
+   * Eliminación de columnas (excepto la columna obligatoria `"sin iniciar"`), moviendo automáticamente las tareas huérfanas de regreso a `"sin iniciar"`.
+   * Navegación fluida: acceso directo al tablero haciendo clic en el nombre del proyecto o en el enlace "Administrar proyecto".
+
+2. **Generación y Descarga de Reportes PDF (`@react-pdf/renderer`)**:
+   * Módulo de reportes independiente integrado en la barra lateral con descargas directas en el navegador.
+   * **Resumen Ejecutivo de Proyectos**: PDF estructurado con métricas de KPIs agregadas de progreso y tablas detalladas por proyecto.
+   * **Reporte Detallado de Tareas**: PDF tabulado que agrupa las tareas del espacio de trabajo por su proyecto correspondiente, mostrando fecha de vencimiento, prioridad y estado.
+
+3. **Manejo Global de Expiración de Sesión (401)**:
+   * Interceptores Axios globales en el cliente que detectan si la sesión expiró o es inválida, borrando automáticamente el store Zustand y redirigiendo al usuario a la pantalla de login para garantizar la seguridad.
+
 
 ---
 
