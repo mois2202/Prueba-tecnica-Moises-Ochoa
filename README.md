@@ -80,10 +80,13 @@ Los archivos `.env` **ya se encuentran incluidos y configurados en el repositori
 Desde la **raíz del monorepositorio**, ejecuta los siguientes comandos:
 
 ```bash
-# 1. Instalar dependencias en todo el monorepo (raíz, backend y frontend)
+# 1. Instalar dependencias en la raíz del monorepo (necesario para las herramientas concurrentes)
+npm install
+
+# 2. Instalar dependencias en los subproyectos (backend y frontend)
 npm run install:all
 
-# 2. Levantar el Backend y Frontend de manera concurrente en modo desarrollo
+# 3. Levantar el Backend y Frontend de manera concurrente en modo desarrollo
 npm run dev
 ```
 
