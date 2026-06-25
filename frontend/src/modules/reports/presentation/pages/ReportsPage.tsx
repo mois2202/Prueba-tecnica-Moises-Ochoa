@@ -1,7 +1,9 @@
 import React from 'react';
 import { FileText, Download, RefreshCw } from 'lucide-react';
-import { PDFDownloadLink } from '@react-pdf/renderer';
+import { PDFDownloadLink as PDFDownloadLinkComponent } from '@react-pdf/renderer';
 import { useReportsList } from '../../application/hooks/useReportsList';
+
+const PDFDownloadLink = PDFDownloadLinkComponent as any;
 import { ReportsTemplate } from '../templates/ReportsTemplate';
 import { ExecutiveReportDocument } from '../organisms/ExecutiveReportDocument';
 import { TasksReportDocument } from '../organisms/TasksReportDocument';

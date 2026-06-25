@@ -1,6 +1,11 @@
 import React from 'react';
-import { Document, Page, Text, View, StyleSheet } from '@react-pdf/renderer';
+import { Document as PDFDocument, Page as PDFPage, Text as PDFText, View as PDFView, StyleSheet } from '@react-pdf/renderer';
 import type { Project } from '../../../projects/domain/project.types';
+
+const Document = PDFDocument as any;
+const Page = PDFPage as any;
+const Text = PDFText as any;
+const View = PDFView as any;
 import type { Task } from '../../../tasks/domain/task.types';
 
 // Styles for the PDF
