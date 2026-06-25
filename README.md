@@ -7,10 +7,10 @@ Este es un monorepositorio que contiene la aplicación de **Gestión de Proyecto
 ## 🛠️ Stack Tecnológico
 
 ### Backend (`/backend`)
-* **Framework**: [NestJS](https://nestjs.com/) (TypeScript)
+* **Framework**: [Express](https://expressjs.com/) (TypeScript) con arquitectura de rutas y controladores estructurados
 * **Base de Datos**: [MongoDB](https://www.mongodb.com/) alojado en **Railway** con **Mongoose** como ORM
-* **Seguridad**: Autenticación basada en **JWT** (JSON Web Tokens) y hasheo de contraseñas con **bcrypt**
-* **Validación**: Validaciones automáticas en la capa de transporte (DTOs) mediante `class-validator` y `class-transformer`
+* **Seguridad**: Autenticación basada en **JWT** (JSON Web Tokens) y hasheo de contraseñas con **bcrypt** mediante un middleware de autenticación personalizado
+* **Validación**: Validaciones de datos de entrada mediante DTOs declarativos (`class-validator` y `class-transformer`) ejecutados en un middleware de validación personalizado
 
 ### Frontend (`/frontend`)
 * **Framework / Entorno**: [React 19](https://react.dev/) + [Vite](https://vite.dev/) + [TypeScript](https://www.typescriptlang.org/)
@@ -27,12 +27,15 @@ Este es un monorepositorio que contiene la aplicación de **Gestión de Proyecto
 ```
 Prueba-tecnica-Moises-Ochoa/
 ├── package.json              # Configuración del monorepo y scripts concurrentes
-├── backend/                  # Proyecto NestJS
+├── backend/                  # Proyecto Express + TypeScript (migrado desde NestJS)
 │   ├── src/
-│   │   ├── auth/             # Módulo de usuarios y JWT Auth
-│   │   ├── projects/         # Módulo CRUD de proyectos
-│   │   ├── tasks/            # Módulo de gestión de tareas paginadas y filtradas
-│   │   └── reports/          # Módulo de analíticas y reportes agregados
+│   │   ├── auth/             # Módulo de usuarios, JWT Auth, controladores, rutas y modelos
+│   │   ├── projects/         # Módulo CRUD de proyectos y gestión de columnas Kanban (controladores, rutas, modelos)
+│   │   ├── tasks/            # Módulo de gestión de tareas paginadas, filtros (controladores, rutas, modelos)
+│   │   ├── reports/          # Módulo de analíticas y reportes agregados (controladores, rutas)
+│   │   ├── middleware/       # Middlewares personalizados (auth, validación con DTOs, control de errores)
+│   │   ├── app.ts            # Configuración de Express (CORS, prefijos de API y middlewares globales)
+│   │   └── main.ts           # Punto de entrada (conexión Mongoose, bootstrap, inyección de dependencias)
 │   ├── .env                  # Variables de entorno del backend (MONGO_URI, PORT, etc.)
 │   └── package.json          
 ├── frontend/                 # Proyecto React + Vite
