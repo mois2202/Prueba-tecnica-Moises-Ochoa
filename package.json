@@ -16,6 +16,9 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3"
   },
+  "optionalDependencies": {
+    "@rolldown/binding-linux-x64-gnu": "1.0.3"
+  },
   "devDependencies": {
     "concurrently": "^8.2.2"
   }
