@@ -14,9 +14,9 @@ import { ReportsController } from './reports/controllers';
 import { createAuthMiddleware } from './middleware/auth.middleware';
 
 async function bootstrap() {
-  const mongoUri = process.env.MONGO_URI;
+  const mongoUri = process.env.MONGO_URI || process.env.MONGO_URL;
   if (!mongoUri) {
-    throw new Error('MONGO_URI no está definido en el archivo .env');
+    throw new Error('MONGO_URI o MONGO_URL no está definido en las variables de entorno');
   }
 
   const jwtSecret = process.env.JWT_SECRET || 'development_secret_key_change_me';
