@@ -7,7 +7,8 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "vite preview --port $PORT --host 0.0.0.0"
   },
   "dependencies": {
     "@react-pdf/renderer": "^4.5.1",
@@ -17,6 +18,7 @@
     "react-dom": "^19.2.6",
     "react-router-dom": "^7.18.0",
     "recharts": "^3.8.1",
+    "vite": "^8.0.12",
     "zod": "^4.4.3",
     "zustand": "^5.0.14"
   },
@@ -31,8 +33,7 @@
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
     "typescript": "~6.0.2",
-    "typescript-eslint": "^8.59.2",
-    "vite": "^8.0.12"
+    "typescript-eslint": "^8.59.2"
   },
   "overrides": {
     "@types/react": "^19.2.14",
