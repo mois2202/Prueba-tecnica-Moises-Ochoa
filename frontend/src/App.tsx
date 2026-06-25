@@ -15,8 +15,6 @@ const ProtectedRoute: React.FC<{ children: React.ReactElement }> = ({ children }
   return isAuthenticated ? children : <Navigate to="/login" replace />;
 };
 
-
-
 // Public Route wrapper component (redirects to home if already logged in)
 const PublicRoute: React.FC<{ children: React.ReactElement }> = ({ children }) => {
   const isAuthenticated = useAuthStore((state) => state.isAuthenticated);
