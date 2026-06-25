@@ -42,7 +42,7 @@ export const ReportsPage: React.FC = () => {
               fileName={`Resumen_Ejecutivo_${new Date().toISOString().split('T')[0]}.pdf`}
               style={{ textDecoration: 'none' }}
             >
-              {({ loading }) => (
+              {({ loading }: { loading: boolean }) => (
                 <button className="btn btn-primary" style={downloadBtnStyle} disabled={loading}>
                   <Download size={16} />
                   <span>{loading ? 'Generando PDF...' : 'Descargar PDF'}</span>
@@ -71,7 +71,7 @@ export const ReportsPage: React.FC = () => {
               fileName={`Reporte_Tareas_${new Date().toISOString().split('T')[0]}.pdf`}
               style={{ textDecoration: 'none' }}
             >
-              {({ loading }) => (
+              {({ loading }: { loading: boolean }) => (
                 <button
                   className="btn"
                   style={{

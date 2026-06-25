@@ -195,7 +195,7 @@ export const ExecutiveReportDocument: React.FC<ExecutiveReportDocumentProps> = (
         {/* Footer */}
         <View style={styles.footer} fixed>
           <Text>© ProjectManager Platform. Todos los derechos reservados.</Text>
-          <Text render={({ pageNumber, totalPages }) => `Página ${pageNumber} de ${totalPages}`} />
+          <Text render={({ pageNumber, totalPages }: { pageNumber: number; totalPages: number | null }) => `Página ${pageNumber} de ${totalPages}`} />
         </View>
       </Page>
     </Document>
